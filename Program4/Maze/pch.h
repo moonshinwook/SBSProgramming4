@@ -25,8 +25,8 @@ struct Pos
 	Pos operator+(Pos& other)
 	{
 		Pos temp;
+		temp.y = y + other.y;
 		temp.x = x + other.x;
-		temp.x = y + other.y;
 
 		return temp;
 	}
