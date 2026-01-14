@@ -49,9 +49,9 @@ void Board::GenerateMap()
 TileType Board::GetTileType(Pos pos)
 {
 	if (pos.x >= _size || pos.x < 0)
-		return TileType::NON;
+		return TileType::NONE;
 	if (pos.y >= _size || pos.y < 0)
-		return TileType::NON;
+		return TileType::NONE;
 
 	return _tile[pos.y][pos.x];
 }

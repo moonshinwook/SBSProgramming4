@@ -11,7 +11,7 @@ enum
 
 enum class TileType
 {
-	NON=0,
+	NONE=0,
 	EMPTY,
 	WALL,
 };

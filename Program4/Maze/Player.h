@@ -19,10 +19,14 @@ public:
 	Pos				GetPos() { return _pos; }
 	void			SetPos(Pos pos) { _pos = pos; }
 private:
+
+	vector<Pos>		_path;
+	int32			_pathIndex = 0;
 	Pos				_pos;
 	Board*			_board;
 	uint64			_sumTick = 0;
-
+	int32			_dir = DIR_UP;
 	void			RandomMove();
+	bool			CanGo(Pos pos);
 };
 
