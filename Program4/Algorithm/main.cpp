@@ -28,50 +28,6 @@ using namespace std;
 //cout << "코드를 작성을 하고, 비교" << endl;
 //cout << "어떻게 분석할까?" << endl;
 
-//// 빨리 실행될수록 좋다.
-//// 느낌적으로 좋은 것 같다.   -> 환경에 따라 코드 출력속도가 다름.
-//// 비교를 하기 위해서 약속된 어떠한 내용을 따르자 -> big O (order of O) 빅오표기법, 알고리즘상 괜찮다.
-//
-//// 시간적으로 얼마나 빠른가
-//
-//// 공간적으로 효율적인가?
-//
-//// N^3
-//
-//cout << "빅오표기법이 무엇일까?" << endl;
-//cout << "실행이 자주 될까 체크" << endl;
-//
-//int a = 10; // 1번 실행
-//
-//for (int i = 0; i < a; i++) // n번 실행했다. n을 아주 큰 수 늘린다 가정. 
-//	cout << i << " ";
-//
-//int target = 100;
-//
-//while (target != a)
-//{
-//	target /= 2;
-//
-//	if (a > target)
-//	{
-//
-//	}
-//}
-//// 범위를 줄이고 
-//for (int x = 0; x < 6; x++)
-//{
-//	if (6 + x == a)
-//	{
-//
-//	}
-//}
-//
-//// n = 1
-//// n = logn
-//// n = ax + b;
-//// n = n * log n;
-//// n = ax^2 + bx + c;
-
 struct Player
 {
 	int id;
@@ -80,217 +36,215 @@ struct Player
 // iterator : ptr 내장하고 있는 클래스. wraping
 // STL container 안에서 포인터로 쓴다. 
 
+// class    (T == int 4) + Node*    8byte + 8byte = 20byte
+// Node 크기 측정. 4 + 나 자신 + 나 자신 -> 컴파일 에러
+// Node* (void*) 주소를 저장하겠다. class Type이 Node인 녀석.
+
+// [꼬리] -> [머리]
+// [꼬리] <- [머리]
+
+// 단방향 : 오로지 한 방향으로만
+// 양방향 : 양쪽으로 가능
+// 순환구조 : 
+
+template <typename T>
+class Node
+{
+public:
+	Node() : _prev(nullptr), _next(nullptr), _data(T()) {}
+	Node(const T& val) : _prev(nullptr), _next(nullptr), _data(val) {}
+public:
+	T _data;
+	Node* _prev;
+	Node* _next;
+
+};
+
 template<typename T>
 class Iterator
 {
 public:
-	Iterator() : _ptr( nullptr ) {} // ':' 멤버 선언
-	Iterator(T* ptr) : _ptr(ptr) {}        
+	Iterator() : _node(nullptr) {} // ':' 멤버 선언
+	Iterator(Node<T>* node) : _node(node) {}
 
 public:
 	Iterator& operator++() // 전위 연산자 (더한 뒤 return)
 	{
-		_ptr++;
+		_node = _node->_next;
 		return *this; // this 클래스의 주소.     _ptr주소의 주소
 	}
 
-	Iterator& operator++(int) // 후위 연산자를 표현하는 방법 it++
+	Iterator operator++(int) // 후위 연산자를 표현하는 방법 it++
 	{
 		Iterator temp = *this; // 새로운 객체 생성. 메모리 할당 대입 연산을 하고
-		_ptr++;
+		_node = _node->_next;
 		return temp;
 	}
 
 	Iterator& operator--()
 	{
-		_ptr--;
+		_node--;
 		return *this;
 	}
 
 	Iterator& operator--(int) // 후위 연산자를 표현하는 방법 it++
 	{
 		Iterator temp = *this; // 새로운 객체 생성. 메모리 할당 대입 연산을 하고
-		_ptr--;
+		_node = _node->_prev;
 		return temp;
-	}
-
-	bool operator==(const Iterator & other)
-	{
-		return _ptr == other._ptr;
 	}
 
 	bool operator==(const Iterator& other)
 	{
-		return !(this* == other);
+		return _node == other._node;
 	}
 
-	Iterator operator+(const int count)
+	bool operator!=(const Iterator& other)
 	{
-		Iterator temp = *this;
-		temp._ptr += count;
-		return temp;
+		return !(*this == other);
 	}
-
-	T& Operator* () { return *_ptr; } // 연산자오버로딩
-
-	// int* ptr; *ptr;
-	//				++it;		it++;
 
 public:
-	T* _ptr;
-	
+	Node<T>* _node;
+
 };
 
-template <typename T>
-class Vector
+
+// [tail] <->    [head]
+
+template<typename T>
+class List
 {
 public:
-	Vector() : _data(nullptr), _size(0), _capacity(0) {}
-	~Vector()
+	List() : _size(0)
 	{
-		if (_data)
-			delete[] _data;
+		_head = new Node<T>(); // 가상의 더미 데이터, 표현을 위해 존재
+		_tail = new Node<T>();
+		_head->_next = _tail;
+		_tail->_prev = _head;
+	}
+	~List()
+	{
+		while (_size > 0)
+			pop_back();
+
+		delete _head;
+		delete _tail;
 	}
 public:
-	// 데이터가 없을 때 _size 0 : _capacity 0
-	void push_back(const T& data)
-	{
-		if (_size == _capacity)
-		{
-			// _data 만들어주자.
-			int newCapacity = _capacity * 1.5;  // 0		1 * 1.5 = 1.5 1  
-			if (newCapacity == _capacity)
-				newCapacity++;
 
-			reserve(newCapacity);
-		}
-		_data[_size] = data;
+	// [ tail ] - Node					[head]
+	void push_back(const T& val) // add
+	{
+		AddNode(_tail, val);
+	}
+
+	void pop_back()			// remove
+	{
+		RemoveNode(_tail->_prev);
+	}
+	// [ tail ] - [_prevNode] - [ Node ] -[before]		[head]
+	Node<T>* AddNode( Node<T>* before, const T& val)
+	{
+		Node<T>* newNode = new Node<T>(val);
+		Node<T>* prevNode = before->_prev;
+
+		newNode->_next = before;
+		before->_prev = newNode;
+
+		newNode->_prev = prevNode;
+		prevNode->_next = newNode;
 
 		_size++;
+
+		return newNode;
+
 	}
 
-	void reserve(int capacity)
+	// [ tail ] - [_prevNode] - [ Node ] -[before]		[head]
+	Node<T>* RemoveNode(Node<T>* node)
 	{
-		// capacity 크기만큼 data를 new만든다.		>> 새로운 메모리 공간을 생성한다.
-		_capacity = capacity;
+		Node<T>* nextNode = node->_next;
+		Node<T>* prevNode = node->_prev;
 
-		T* newData = new T[_capacity];
-		// 기존 데이터를 새로운 공간으로 이주시켜줘.(★★★★)
+		prevNode->_next = nextNode;
+		nextNode->_prev = prevNode;
 
-		for (int i = 0; i < _size; i++)
-			newData[i] = _data[i];
+		delete node;
+		_size--;
 
-		if (_data)
-			delete[] _data; // 기준
-
-		_data = newData;
+		return nextNode;
 	}
-
-	T& operator[](int index) 
-	{ 
-		return _data[index];
-	}			
 
 	int size() { return _size; }
-	int capacity() { return _capacity; }
-
-private:
+public:
 	typedef Iterator<T> iterator;
 
-	iterator begin() { return iterator( &_data[0]); } // 첫번째 순서의 주소를 받기 위해 '&'
-	iterator end() { return begin() + _size; }
+	iterator begin() { return iterator(_head->_next); }
+	iterator end() { return iterator(_tail); }
+
+	iterator insert(iterator it, const T& value)
+	{
+		Node<T>* node = AddNode(it._node, value);
+		return iterator(node);
+	}
+
+	iterator erase(iterator it)
+	{
+		Node<T>* node = RemoveNode(it._node);
+		return iterator(node);
+	}
+
 private:
-	T* _data;
+	Node<T>* _tail;
+	Node<T>* _head;
 	int _size;
-	int _capacity;
 };
 
+// 배열(array) -> vector -> list 
 
-// 면접에서 직접 구현 << 
-// 만들기 위한 이론적인 원리
+//											vector				List
+// 뒤에 삽입/삭제 속도						O(1)				O(1)
+// 중간 삽입/삭제 (첫번째, 아무 위치)			O(n)				O(1)
+// 임의 접근									O(1)				O(n)
+
+// list 노드 기반으로 데이터를 연결. class node
+
+// ★★★★ list
+// list::iterator 함께 사용해야 중간 삽입 삭제 빠르다.
+// 장점 : 중간 삽입 삭제 빠르다
+// 단점 : 임의 접근이 느리다.
+
+// 중간을 삭제하려면 중간에 접근이 필요한데 단점이 장점을 가리니깐 장점이 아니지 않나?
+// 데이터를 찾아서 삭제를 하려고하면 느립니다. << list 자체가 사용에 불편한 이유입니다.
+// iterator 도구를 사용하기 때문에. iterator미리 찾아 뒀다면? iterator 사용 시 빠르다.
 
 int main()
 {
-	 
+	List<int> li;
 
-	// 플레이어를 최대 10명까지만 저장할 수 있다. 
-	// 100000
-	// array (고정 배열) <-> 가변 배열   vector, list
-	// array가 vector보다 안 좋은가? 그건 아니다. 크기가 고정되어있으면 성능상 array 더 좋습니다. 
+	// [999] [1] [2] [3] [444]  [4]  [5]
 
+	li.push_back(1);
+	li.push_back(2);
+	li.push_back(3);
+	li.push_back(4);
+	li.push_back(5);
+	//li.push_front(999);
 
-	// (맨처음) (맨끝) (중간) 삽입 삭제  
-	// 임의 접근 (Random Access) 
+	auto insertIt = li.begin();
 
-	// reserve 최소한으로 하려면 어떻게 하면 좋은가? 미리 만들어놓는다. reserve()
-	// 미리 만들어서 빠르게 사용할 수 있다. 
-
-	Vector<int> v;
-	v.reserve(100);
-	for (int i = 0; i < 25; i++)
+	for (int i = 0;i < 4; i++) // ★★★★
 	{
-		v.push_back(i);
-		cout << v[i] << " " << v.size() << " " << v.capacity() << endl;
+		insertIt++;
 	}
 
-	Vector<int>::iterator vStart = v.begin();
-	cout << "후위 연산자, 전위 연산자" << endl;   // 전위 연산자는  1, 후위 연산자는  0이 출력된 뒤 ++ 됌.
-	cout << "전위 연산자 : " << *(vStart++) << endl;
+	li.insert(insertIt, 444);
 
-	//v.clear();
-	//vector<int> temp;
-	//swap(v, temp);
-	//cout << v.size() << " " << v.capacity() << endl;
-
-
-
-	// 면접 단골 질문(★★)
-	// Q) 데이터 insert, 데이터 push_front 지원을 하지 않는다. 이유는? 
-	// A) 느리다. n만큼 order of N -   O(N)시간만큼 걸린다.
-	
-	// Random Access(★★★★★)   시작 주소 + << ----> 주소가 연속적으로 배치가 되어 있기 때문에 
-	// Id 45000			_data[45000] 데이터만 넣으면 O(1) 시간만큼 걸린다. 항상 일정한 시간이 걸린다. 공간을 낭비시키면 시간을 절약한다. 
-	// vector와 array의 차이점을 생각하면서 정리하기
-
-
-	//// iterator << 뭐지?
-	//// v.push_front(); vector은 push_front지원을 안 해주네?
-	//// v.insert()
-
-	//// iterator가 뭔가요? ptr인데, 자료구조에 귀속되어 있는 ptr
-
-	//// 결론 : STL 자료구조(컨테이너) - 반복자(iterator)를 통해서 조작할 수 있다. 
-
-	//vector<int>::iterator itBegin = v.begin();
-	//vector<int>::iterator itEnd = v.end();
-	//cout << endl;
-
-
-	//v.insert(v.begin() + 5, 9999);
-	//v.erase(v.begin() + 5);
-	//for (vector<int>::iterator it = v.begin(); it != v.end(); ++it)
-	//{
-	//	cout << (*it) << " ";
-	//}
-
-	//// 99번 째 아이디를 가지고 있는 플레이어를 삭제해주세요.
-
-	for (Vector<int>::iterator it = v.begin(); it != v.end();)
+	for (auto it = li.begin(); it != li.end(); ++it)
 	{
-		int data = (*it);
-
-		if (data == 3)
-		{
-			//it = v.erase(it); // 3번째 3을 지워라
-		}
-		else
-		{
-			++it; // 기존의 반복문에서 ++대체
-		}
-	}
-	cout << endl;
-	for (Vector<int>::iterator it = v.begin(); it != v.end(); ++it)
-	{
-		cout << (*it) << " ";
+		cout << it._node->_data << " ";
 	}
 }
+
+	 
