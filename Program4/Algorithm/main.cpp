@@ -77,6 +77,70 @@ struct Player
 	int id;
 };
 
+// iterator : ptr 내장하고 있는 클래스. wraping
+// STL container 안에서 포인터로 쓴다. 
+
+template<typename T>
+class Iterator
+{
+public:
+	Iterator() : _ptr( nullptr ) {} // ':' 멤버 선언
+	Iterator(T* ptr) : _ptr(ptr) {}        
+
+public:
+	Iterator& operator++() // 전위 연산자 (더한 뒤 return)
+	{
+		_ptr++;
+		return *this; // this 클래스의 주소.     _ptr주소의 주소
+	}
+
+	Iterator& operator++(int) // 후위 연산자를 표현하는 방법 it++
+	{
+		Iterator temp = *this; // 새로운 객체 생성. 메모리 할당 대입 연산을 하고
+		_ptr++;
+		return temp;
+	}
+
+	Iterator& operator--()
+	{
+		_ptr--;
+		return *this;
+	}
+
+	Iterator& operator--(int) // 후위 연산자를 표현하는 방법 it++
+	{
+		Iterator temp = *this; // 새로운 객체 생성. 메모리 할당 대입 연산을 하고
+		_ptr--;
+		return temp;
+	}
+
+	bool operator==(const Iterator & other)
+	{
+		return _ptr == other._ptr;
+	}
+
+	bool operator==(const Iterator& other)
+	{
+		return !(this* == other);
+	}
+
+	Iterator operator+(const int count)
+	{
+		Iterator temp = *this;
+		temp._ptr += count;
+		return temp;
+	}
+
+	T& Operator* () { return *_ptr; } // 연산자오버로딩
+
+	// int* ptr; *ptr;
+	//				++it;		it++;
+
+public:
+	T* _ptr;
+	
+};
+
 template <typename T>
 class Vector
 {
@@ -131,6 +195,11 @@ public:
 	int capacity() { return _capacity; }
 
 private:
+	typedef Iterator<T> iterator;
+
+	iterator begin() { return iterator( &_data[0]); } // 첫번째 순서의 주소를 받기 위해 '&'
+	iterator end() { return begin() + _size; }
+private:
 	T* _data;
 	int _size;
 	int _capacity;
@@ -142,6 +211,8 @@ private:
 
 int main()
 {
+	 
+
 	// 플레이어를 최대 10명까지만 저장할 수 있다. 
 	// 100000
 	// array (고정 배열) <-> 가변 배열   vector, list
@@ -154,17 +225,22 @@ int main()
 	// reserve 최소한으로 하려면 어떻게 하면 좋은가? 미리 만들어놓는다. reserve()
 	// 미리 만들어서 빠르게 사용할 수 있다. 
 
-	vector<int> v;
+	Vector<int> v;
 	v.reserve(100);
 	for (int i = 0; i < 25; i++)
 	{
 		v.push_back(i);
 		cout << v[i] << " " << v.size() << " " << v.capacity() << endl;
 	}
-	v.clear();
-	vector<int> temp;
-	swap(v, temp);
-	cout << v.size() << " " << v.capacity() << endl;
+
+	Vector<int>::iterator vStart = v.begin();
+	cout << "후위 연산자, 전위 연산자" << endl;   // 전위 연산자는  1, 후위 연산자는  0이 출력된 뒤 ++ 됌.
+	cout << "전위 연산자 : " << *(vStart++) << endl;
+
+	//v.clear();
+	//vector<int> temp;
+	//swap(v, temp);
+	//cout << v.size() << " " << v.capacity() << endl;
 
 
 
@@ -199,22 +275,22 @@ int main()
 
 	//// 99번 째 아이디를 가지고 있는 플레이어를 삭제해주세요.
 
-	//for (vector<int>::iterator it = v.begin(); it != v.end();)
-	//{
-	//	int data = (*it);
+	for (Vector<int>::iterator it = v.begin(); it != v.end();)
+	{
+		int data = (*it);
 
-	//	if (data == 3)
-	//	{
-	//		it = v.erase(it); // 3번째 3을 지워라
-	//	}
-	//	else
-	//	{
-	//		++it; // 기존의 반복문에서 ++대체
-	//	}
-	//}
-	//cout << endl;
-	//for (vector<int>::iterator it = v.begin(); it != v.end(); ++it)
-	//{
-	//	cout << (*it) << " ";
-	//}
+		if (data == 3)
+		{
+			//it = v.erase(it); // 3번째 3을 지워라
+		}
+		else
+		{
+			++it; // 기존의 반복문에서 ++대체
+		}
+	}
+	cout << endl;
+	for (Vector<int>::iterator it = v.begin(); it != v.end(); ++it)
+	{
+		cout << (*it) << " ";
+	}
 }

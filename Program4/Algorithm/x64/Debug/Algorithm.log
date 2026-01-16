@@ -1,2 +1,15 @@
 ﻿  main.cpp
-  Algorithm.vcxproj -> C:\Users\Administrator\Desktop\SBSProgramming4\Program4\x64\Debug\Algorithm.exe
+C:\Users\Administrator\Desktop\SBSProgramming4\Program4\Algorithm\main.cpp(122,7): error C2535: 'bool Iterator<T>::operator ==(const Iterator<T> &)': 멤버 함수를 이미 정의했거나 선언했습니다.
+      C:\Users\Administrator\Desktop\SBSProgramming4\Program4\Algorithm\main.cpp(117,7):
+      'Iterator<T>::operator ==' 선언을 참조하십시오.
+      C:\Users\Administrator\Desktop\SBSProgramming4\Program4\Algorithm\main.cpp(122,7):
+      템플릿 인스턴스화 컨텍스트(가장 오래된 인스턴스화 컨텍스트)가
+          C:\Users\Administrator\Desktop\SBSProgramming4\Program4\Algorithm\main.cpp(84,7):
+          클래스 템플릿 'Iterator'을(를) 컴파일하는 동안
+  
+C:\Users\Administrator\Desktop\SBSProgramming4\Program4\Algorithm\main.cpp(134,13): error C2143: 구문 오류: ';'이(가) '*' 앞에 없습니다.
+C:\Users\Administrator\Desktop\SBSProgramming4\Program4\Algorithm\main.cpp(134,18): error C2334: '{' 앞에 예기치 않은 토큰이 있습니다. 명백한 함수 본문을 건너뜁니다.
+C:\Users\Administrator\Desktop\SBSProgramming4\Program4\Algorithm\main.cpp(124,18): error C2760: 구문 오류: 여기서 '=='은(는) 예상치 못한 오류였습니다. 예상된 오류는 '식'였습니다
+C:\Users\Administrator\Desktop\SBSProgramming4\Program4\Algorithm\main.cpp(124,18): error C3878: 구문 오류: 예기치 않은 토큰 '=='이(가) 'expression' 다음에 있습니다.
+C:\Users\Administrator\Desktop\SBSProgramming4\Program4\Algorithm\main.cpp(124,26): error C2760: 구문 오류: 여기서 ')'은(는) 예상치 못한 오류였습니다. 예상된 오류는 ';'였습니다
+C:\Users\Administrator\Desktop\SBSProgramming4\Program4\Algorithm\main.cpp(124,26): error C3878: 구문 오류: 예기치 않은 토큰 ')'이(가) 'jump-statement' 다음에 있습니다.
