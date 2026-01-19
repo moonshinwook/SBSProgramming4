@@ -6,7 +6,7 @@ class Player
 {
 	enum
 	{
-		MOVE_TICK = 10,
+		MOVE_TICK = 50,
 	};
 
 public:
@@ -28,5 +28,8 @@ private:
 	int32			_dir = DIR_UP;
 	void			RandomMove();
 	bool			CanGo(Pos pos);
+
+private:
+	void RightHand();
 };
 

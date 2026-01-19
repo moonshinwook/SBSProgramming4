@@ -39,5 +39,7 @@ private:
 	int32 _size;
 	
 	void					BinaryTree();
+
+
 };
 

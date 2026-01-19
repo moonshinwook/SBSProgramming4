@@ -12,47 +12,9 @@ Player::~Player()
 
 void Player::Init(Board* board)
 {
-		_pos = board->GetStartPos();
-		_board = board;
+	_board = board;
+	RightHand();
 
-		Pos pos = _pos;
-		Pos dest = _board->GetEndPos();
-
-		_path.clear(); // 내용물 초기화
-		_path.push_back(pos); // [시작 위치][다음 위치][][][도착지]
-
-		Pos front[4] =
-		{
-			Pos{-1, 0}, // 위
-			Pos{0, -1}, // 왼
-			Pos{1, 0},  // 아래
-			Pos{0, 1},  // 오
-		};
-
-		while (pos != dest)
-		{
-			int32 newDir = (_dir - 1 + DIR_COUNT) % DIR_COUNT;
-
-
-			// 1. 오른쪽 방향으로 갈 수 있습니까? 
-			if (CanGo(pos + front[newDir]))
-			{
-				_dir = newDir;
-				pos += front[_dir];
-				_path.push_back(pos);
-			}
-			// 2. 정면 방향을 갈 수 있습니까?
-			else if (CanGo(pos + front[_dir]))
-			{
-				pos += front[_dir];
-				_path.push_back(pos);
-			}
-			// 3. 왼쪽으로 회전하세요.
-			else
-			{
-				_dir = (_dir + 1) % DIR_COUNT;
-			}
-		}
 }
 
 void Player::Update(uint64 deltaTick)
@@ -107,6 +69,56 @@ bool Player::CanGo(Pos pos)
 	TileType tileType = _board->GetTileType(pos);
 	return tileType == TileType::EMPTY;
 }
+
+void Player::RightHand()
+{
+	_pos = _board->GetStartPos();
+
+
+	Pos pos = _pos;
+	Pos dest = _board->GetEndPos();
+
+	_path.clear(); // 내용물 초기화
+	_path.push_back(pos); // [시작 위치][다음 위치][][][도착지]
+
+	Pos front[4] =
+	{
+		Pos{-1, 0}, // 위
+		Pos{0, -1}, // 왼
+		Pos{1, 0},  // 아래
+		Pos{0, 1},  // 오
+	};
+
+	while (pos != dest)
+	{
+		int32 newDir = (_dir - 1 + DIR_COUNT) % DIR_COUNT;
+
+
+		// 1. 오른쪽 방향으로 갈 수 있습니까? 
+		if (CanGo(pos + front[newDir]))
+		{
+			_dir = newDir;
+			pos += front[_dir];
+			_path.push_back(pos);
+		}
+		// 2. 정면 방향을 갈 수 있습니까?
+		else if (CanGo(pos + front[_dir]))
+		{
+			pos += front[_dir];
+			_path.push_back(pos);
+		}
+		// 3. 왼쪽으로 회전하세요.
+		else
+		{
+			_dir = (_dir + 1) % DIR_COUNT;
+		}
+	}
+	// 1. vector<Pos> path. index
+	// path[i] == path[i+1] << 되돌아가는 경우이기 때문에 path 지워주자.
+	// stack		[][][][][][]
+}
+
+
 
 // 길찾기
 // 문제해결 - 기존 해결 방식보다 뛰어난 문제 해결 방식을 찾는다. 
