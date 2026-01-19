@@ -28,7 +28,7 @@ using namespace std;
 // vector?
 // list?
 
-template <typename T, template <typename >class _Container >
+template <typename T, typename Container = vector<T>>
 class Stack // LIFO
 {
 public:
@@ -58,7 +58,7 @@ public:
 	}
 
 private:
-	_Container<T> _container;
+	Container _container;
 
 
 };
@@ -70,7 +70,7 @@ private:
 int main()
 {
 
-	stack<int> s;
+	Stack<int, vector<int>> s;
 	s.push(1);
 	s.push(2);
 	s.push(3);

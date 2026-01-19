@@ -89,10 +89,16 @@ void Player::RightHand()
 		Pos{0, 1},  // 오
 	};
 
+	int count = 0;
+	int maxcount = 1000;
+
 	while (pos != dest)
 	{
 		int32 newDir = (_dir - 1 + DIR_COUNT) % DIR_COUNT;
 
+		if (count >= maxcount)
+			return;
+		
 
 		// 1. 오른쪽 방향으로 갈 수 있습니까? 
 		if (CanGo(pos + front[newDir]))
@@ -100,6 +106,7 @@ void Player::RightHand()
 			_dir = newDir;
 			pos += front[_dir];
 			_path.push_back(pos);
+			count++;
 		}
 		// 2. 정면 방향을 갈 수 있습니까?
 		else if (CanGo(pos + front[_dir]))
@@ -113,9 +120,33 @@ void Player::RightHand()
 			_dir = (_dir + 1) % DIR_COUNT;
 		}
 	}
+	stack<Pos> s;
 	// 1. vector<Pos> path. index
 	// path[i] == path[i+1] << 되돌아가는 경우이기 때문에 path 지워주자.
-	// stack		[][][][][][]
+	// stack		[0][1][2][3][4][]
+
+	for (int i = 0; i < _path.size() - 1; i++)
+	{
+		if (s.empty() == false && s.top() == _path[i + 1])
+			s.pop();
+		else
+			s.push(_path[i]);
+	}
+
+	if (s.empty() == false)
+		s.push(_path.back());
+
+	vector<Pos> path; // 새로 만든 path
+
+	while (s.empty() == false)
+	{
+		path.push_back(s.top());
+		s.pop();
+	}
+	reverse(path.begin(), path.end());
+	_path = path;
+
+	
 }
 
 

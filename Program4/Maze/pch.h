@@ -5,6 +5,7 @@
 #include <vector>
 #include <Windows.h>
 #include "Types.h"
+#include <stack>
 using namespace std;
 
 

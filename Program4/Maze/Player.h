@@ -30,6 +30,13 @@ private:
 	bool			CanGo(Pos pos);
 
 private:
-	void RightHand();
+	void			RightHand();
 };
+
+
+// RandomMove - 탈출 불가.
+// RightHand  - 문제가 있다. 
+// bool true false
+// Pos[25][25] = false(true) << 가지마라.
+// 그래프. 길이 2개보다 많다. 
 
