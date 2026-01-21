@@ -43,8 +43,8 @@ void Board::Render()
 // binary Tree
 void Board::GenerateMap()
 {
-	//BinaryTree();
-	BadMap();
+	BinaryTree();
+	//BadMap();
 }
 
 TileType Board::GetTileType(Pos pos)

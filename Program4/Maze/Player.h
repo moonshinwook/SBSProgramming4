@@ -31,6 +31,7 @@ private:
 
 private:
 	void			RightHand();
+	void			BFS();
 };
 
 

@@ -141,6 +141,7 @@ vector<bool> visited(8, false);
     //[5]
 // [8]
 
+// 선 연결 유무 확인용으로 활용됌.
 void DFS(int here)
 {
 	visited[here] = true;

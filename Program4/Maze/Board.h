@@ -27,6 +27,7 @@ public:
 	void					Init(int32 size, Player* player);
 	void					Render();
 
+	int32					GetSize() { return _size; } // 필요해서 새로 만듦
 	Pos						GetStartPos() { return Pos{ 1, 1 }; }
 	Pos						GetEndPos()   { return Pos{ _size - 2, _size - 2 }; }
 
