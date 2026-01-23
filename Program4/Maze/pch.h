@@ -25,7 +25,7 @@ struct Pos
 
 	Pos operator+(Pos& other)
 	{
-		Pos temp;
+		Pos temp ;
 		temp.y = y + other.y;
 		temp.x = x + other.x;
 
@@ -41,8 +41,8 @@ struct Pos
 
 
 
-	int32 x = 0;
-	int32 y = 0;
+	int x = 0;
+	int y = 0;
 };
 
 enum Dir

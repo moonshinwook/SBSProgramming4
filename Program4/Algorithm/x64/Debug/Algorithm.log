@@ -1,3 +1,8 @@
 ﻿  main.cpp
-C:\Users\Administrator\Desktop\SBSProgramming4\Program4\Algorithm\main.cpp(151,12): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+<<<<<<< HEAD
+C:\Users\Administrator\Desktop\SBSProgramming4\Program4\Algorithm\main.cpp(160,12): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Algorithm.vcxproj -> C:\Users\Administrator\Desktop\SBSProgramming4\Program4\x64\Debug\Algorithm.exe
+=======
+C:\Users\msw47\바탕 화면\SBSProgramming4\Program4\Algorithm\main.cpp(160,12): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Algorithm.vcxproj -> C:\Users\msw47\바탕 화면\SBSProgramming4\Program4\x64\Debug\Algorithm.exe
+>>>>>>> 6178d8bc7c0e4861a9823a13f251d6d14c2dc5fd

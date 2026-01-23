@@ -16,14 +16,19 @@ void Player::Init(Board* board)
 	_board = board;
 	//RightHand();
 
-	BFS();
+	//BFS();
+	Astar();
 }
 
 void Player::Update(uint64 deltaTick)
 {
 	if (_pathIndex >= _path.size()) // 정해진 수를 넘어가지 못하도록 방지하는 코드
+	{
+		_pathIndex = 0;
+		_board->Init(_board->GetSize(), this); // Generatetemp << 새로운 맵
+		Init(_board);
 		return;
-
+	}
 	_sumTick += deltaTick;
 
 	if (_sumTick >= MOVE_TICK)
@@ -217,6 +222,204 @@ void Player::BFS()
 	}
 	reverse(_path.begin(), _path.end());
 }
+
+
+
+// CostVertex{int cost.}
+// F G H 구조체
+
+// BFS -> 다익스트라(Best) -> Astar
+// 비용1     비용이 다름      도착지점
+
+// F = G + H 최종 이동 거리.
+// G = 시작점에서 움직일 좌표로 이동하는데 드는 비용 
+// ( 작을 수록 좋다, 어디로 움직이는지에 따라 다르다.)
+// H = 휴리스틱. 추정치. 현재 위치. 최종 도착지점까지의 거리.(작을 수록 좋다.) 고정 
+
+struct PQNode
+{
+	bool operator<(const PQNode& other) const { return f < other.f; }
+	bool operator>(const PQNode& other) const { return f < other.f; }
+
+	int f;
+	int g;
+	Pos pos;
+};
+
+void Player::Astar()
+{
+	_pos = _board->GetStartPos();
+	Pos start = _pos;
+	Pos dest = _board->GetEndPos();
+	int size = _board->GetSize();
+
+	const int Noparent = -1;
+
+	vector<vector<bool>> closed(size, vector<bool>(size, false));
+	vector<vector<Pos>> parent(size, vector<Pos>(size, Pos{ -1, -1}));
+	vector<vector<int>> best(size, vector<int>(size, INT32_MAX));
+
+	Pos front[8] = 
+	{
+	Pos{-1, 0}, // 위
+	Pos{0, -1}, // 왼
+	Pos{1, 0},  // 아래
+	Pos{0, 1},  // 오
+	Pos{-1, -1},  // 위왼
+	Pos{1, -1},  // 아왼
+	Pos{1, 1},  // 아오
+	Pos{-1, 1},  // 위오
+	};
+
+	int cost[8]
+	{
+		10,
+		10,
+		10,
+		10,
+		14,
+		14,
+		14,
+		14,
+	};
+
+	enum
+	{
+		DIR_COUNT = 8,
+	};
+
+	priority_queue < PQNode, vector<PQNode>, greater<PQNode>> pq;
+
+	{
+		int g = 0;
+		int h = 10 * (abs(dest.y - start.y) + abs(dest.x - start.x));
+		
+	}
+}
+
+
+//struct PQNode
+//{
+//	// PQ(priority queue) 사용을 위해 
+//	bool operator<(const PQNode& other) const { return f < other.f;  }
+//	bool operator>(const PQNode& other) const { return f > other.f;  }
+//
+//	int f;
+//	int g;
+//	Pos pos;
+//};
+//
+//void Player::Astar()
+//{
+//	_pos = _board->GetStartPos();
+//	Pos start = _pos;
+//	Pos dest = _board->GetEndPos();
+//	int size = _board->GetSize();
+//
+//	const int Noparent = -1;
+//
+//	// bool
+//	// parent
+//	vector<vector<bool>> closed(size, vector<bool>(size, false));
+//	vector<vector<Pos>> parent(size, vector<Pos>(size, Pos{ -1, -1 }));
+//	vector<vector<int>> best(size, vector<int>(size, INT32_MAX));
+//
+//	Pos front[8] =
+//	{
+//		Pos{-1, 0}, // 위
+//		Pos{0, -1}, // 왼
+//		Pos{1, 0},  // 아래
+//		Pos{0, 1},  // 오
+//		Pos{-1, -1},  // 위왼
+//		Pos{1, -1},  // 아왼
+//		Pos{1, 1},  // 아오
+//		Pos{-1, 1},  // 위오
+//	};
+//
+//	// TODO : 왜 1이 아닌 10으로 지정?
+//
+//	int cost[8] =
+//	{
+//		10,
+//		10,
+//		10,
+//		10,
+//		14,
+//		14,
+//		14,
+//		14,
+//	};
+//
+//	enum
+//	{
+//		DIR_COUNT = 8,
+//	};
+//
+//	priority_queue<PQNode, vector<PQNode>, greater<PQNode>> pq;
+//
+//	// Astar F, G, H
+//	// int f, int g, int h
+//	// 시작 지점에서 시작 지점으로 이동하는 비용을 계산하라.
+//	// 비용 계산에서 음수가 나왔다. 수학적으로 음수를 나오지 못하게 하는 방법은? 절대값
+//	{
+//		int g = node; // 안 움직임
+//		// abs = 절대값, 음수가 나오지 않도록 하기 위한 장치
+//		int h = 10 * (abs(dest.y - start.y) + abs(dest.x - start.x));
+//		pq.push(PQNode{ g + h, g, start }); // queue<q> q.push
+//		closed[start.y][start.x] = true;
+//		parent[start.y][start.x] = start;  // _path 조건
+//		best[start.y][start.x] = g + h; 
+//	}
+//
+//
+//	while (pq.empty() == false)
+//	{
+//		PQNode node = pq.top();
+//		pq.pop();
+//
+//		if (best[node.pos.y][node.pos.x] < node.f)
+//			continue;
+//		if (node.pos == dest)
+//			break;
+//
+//		for (int i = 0; i < DIR_COUNT; i++)
+//		{
+//			Pos nextPos = node.pos + front[i];
+//			if (CanGo(nextPos) == false)
+//				continue;
+//			if (closed[nextPos.y][nextPos.x])
+//				continue;
+//
+//			// --------------------------------- openlist
+//			// 비용을 비교한다.
+//
+//			int g = node.g + cost[i];
+//			int h = 10 * (abs(dest.y - nextPos.y) + abs(dest.x - nextPos.x));
+//
+//			if (best[nextPos.y][nextPos.x] < g + h)
+//				continue;
+//
+//			// 더 최적의 경로를 찾았네
+//			pq.push(PQNode{ g + h, g, nextPos }); // queue<q> q.push
+//			closed[nextPos.y][nextPos.x] = true;
+//			parent[nextPos.y][nextPos.x] = node.pos;  // _path 조건
+//			best[nextPos.y][nextPos.x] = g + h;
+//		}
+//	}
+//
+//	_path.clear(); // BFS로만 하기 위한 코드 충돌 바지
+//	_pathIndex = 0;
+//	Pos pos = dest;
+//
+//	while (true)
+//	{
+//		_path.push_back(pos);
+//		if (pos == parent[pos.y][pos.x])
+//			break;
+//		pos = parent[pos.y][pos.x];
+//	}
+//	reverse(_path.begin(), _path.end());
+//}
 
 
 
