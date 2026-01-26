@@ -9,160 +9,185 @@
 #include <queue>
 #include <unordered_map>
 #include <algorithm>
+
 using namespace std;
 
-// minDistance 구하는 방법
-// n번 순회해서 제일 작은 값을 고른다.
+// 자료구조. 선형 
+// vector, list, deque(원리 정도 이해하기)
 
-// 데이터를 push할때도 시간이 발생.
-// vector가장 큰 특징. push_back 매우 빠름 O(1)
-// 최소 값 찾을려면 n번도 해야 한다 O(N)시간이 걸림.
+// 데이터 삽입, 삭제(앞, 중간, 뒤) : 시간
+// 데이터 삭제
+// 임의 접근
 
-int minDistance()
+// deque - stack, queue 컨테이너로 사용된다. 
+// deque는 vector, list 장점을 합쳐놓은 녀석이다.
+// 시간, 공간
+
+void BinarySearch(int n)
 {
-	vector<int> v;
+	// 1 ~ 10까지 중에 숫자 찾기 로직 만들기.
 
-	v.push_back(10);
-	v.push_back(30);
-	v.push_back(20);
-	v.push_back(40);
+	vector<int> v{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+	int left = 0;
+	int right = v.size() - 1;
 
-	int bestValue = INT32_MAX; // 값이 쌀수록 싸다.
+	int mid = (left + right) / 2;
 
-	for (int i = 0; i < v.size(); i++)
+	while (left <= right)
 	{
-		if (bestValue < v[i])
-			continue;
-
-		// 아래쪽 내려왔다? 더 작은 값을 찾았구나
-		bestValue = v[i];
-				
-	}
-
-	cout << bestValue << endl;
-
-	return bestValue;
-}
-
-// 우선 순위 큐
-// 우선 순위가 높은 값부터 출력해주는 특별한 컨테이너.
-// 값이 가장 큰 것을 위로, 값이 가장 작은 것을 위로
-
-// 힙-트리
-// 트리 << 
-
-// priority_queue의 push O(log N)걸림, 계속 부모를 찾기 위해 /2를 실행. -> 매우 효율적
-// top() O(1)걸림
-
-template<typename T, typename Container = vector<T>> 
-
-class Priority_queue
-{
-public:
-
-	// left chilren
-	// right children
-	// parent
-
-	void push(const T& value)
-	{
-		_heap.push_back(value);
-
-		int now = static_cast<int>(_heap.size()) - 1;
-
-		while (now > 0)
-		{
-			int parent = (now - 1) / 2;
-
-			if (_heap[now] > _heap[parent]) // 부모한테 진 경우 무시.
-				break; 
-
-			// 부모를 이겼다. 나랑 바꿔
-			::swap(_heap[parent], _heap[now]);
-			now = parent;
-
-			
-		}
-	}
-
-	void pop()
-	{
-		_heap[0] = _heap.back();	// 왼쪽부터 채워나가기 규칙 지키기.
-		_heap.pop_back();
-
-		int now = 0;
-
-		while (true)
-		{
-			int left = 2 * now + 1;
-			int right = 2 * now + 2; 
-
-			if (left >= _heap.size())
-				break;
-
-			int next = now;
-
-			if (_heap[next] > _heap[left])
-				next = left;
-
-			if (right < _heap.size() && _heap[next] > _heap[right]) // > 작은 것부터
-				next = right;
-
-			if (next == now)
-				break;
-
-
-			::swap(_heap[now], _heap[next]);
-			now = next;
-		}
+		if()
 
 	}
 
-	T& top()
-	{
-		return _heap[0];
-	}
-
-	bool empty()
-	{
-		return _heap.empty();
-	}
-
-private:
-	Container _heap = {}; 
-};
-
-void examPQ()
-{
-	Priority_queue<int, vector<int>> pq;
-
-	for (int i = 0; i < 20; i++)
-	{
-		int rValue = rand() % 100;
-		pq.push(rValue);
-	}
-
-	while (pq.empty() == false)
-	{
-		int count = pq.top();
-		pq.pop();
-
-		cout << count << " ";
-	}
-
-	
-
+	//vector<int> v{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }; // 1 + 10 == 11 / 2 = 5(정수만) 
+	//int left = 0;
+	//int right = v.size() - 1;
+	//
+	//bool _flag = false;
+	//while (left <= right)         // 1, 2        0 + 1 / 2 = 0
+	//{
+	//	cout << "탐색 Search Range " << left << " - " << right << endl; // 디버깅
+	//	int mid = (left + right) / 2;
+	//	if (v[mid] > n)
+	//	{
+	//		cout << n << " < " << v[mid] << endl;
+	//		right = mid - 1;
+	//	}
+	//	else if (v[mid] < n)
+	//	{
+	//		cout << n << " > " << v[mid] << endl;
+	//		left = mid + 1;
+	//	}
+	//	else
+	//	{
+	//		cout << "Find! " << endl;
+	//		break;
+	//	}
+	//}
+	//if (_flag == false)
+	//	cout << "데이터를 찾을 수 없습니다." << endl;
+	//
 }
 
 
 int main()
 {
-	srand(time(nullptr));
-	minDistance();
-	examPQ();
+#pragma region deque
+	vector<int> v;
+	v.push_back(1);
 
+	queue<int> q;
+	q.push(1);
+
+	deque<int> dq;
+	dq.push_back(1);
+	dq.push_back(2);
+	dq.push_back(3);
+	dq.push_back(4);
+
+	dq.push_back(5);
+	dq.push_back(6);
+
+	dq.push_front(5);
+
+	while (dq.empty() == false)
+	{
+		int count = dq.front();
+		dq.pop_front();
+		cout << count << " ";
+
+	}
+#pragma endregion
+
+	// -----------------------------------------------------
+	// Q. 
+
+	struct Item
+	{
+		int id;
+		string name;
+	};
+
+	{
+		vector<Item> items;
+		items.push_back(Item{ 1, "AAA" });
+	}
+	// pair type 
+	{
+		pair<int, string> item(make_pair(2, "DDD"));
+
+		cout << endl;
+		cout << item.first << endl;		// vector<int> 데이터 삽입, 삭제, 정렬, 검색		-> second
+		cout << item.second << endl;
+
+		// 아이템 번호가 999인 데이터를 찾아서, 그 데이터를 플레이어에게 전달해줘.
+
+		vector<pair<int, string>> items;
+
+		items.push_back(item);
+		items.push_back(make_pair(1, "AAA")); // token
+		items.push_back(make_pair(3, "BBB"));
+		items.push_back(make_pair(5, "CCC"));
+
+		// 1, 2, 3, 4, 5 아이템들이 이다. 아이템이 3인 녀석을 찾아서 코드를 출력해줘.
+		// 비용 최소화 방법.
+		// 빅오 표기법, 어떤 조건(정렬이 되었을 때) 아래에서 logN의 효율을 가지고 탐색할 수 있는 BS (Binary Search)
+		// O(logN) - 이번 주의 목표
+		for (auto it = items.begin(); it != items.end(); ++it)
+		{
+			if (3 == it->first)
+			{
+				cout << it->second << endl;
+			}
+			else
+			{
+				continue;
+			}
+
+		}
+
+	}
+
+	// vector - map - hash table(unordered map) 99% 사용
+	// 연관 컨테이너
+	{
+		map<int, string> m;
+		m.insert(make_pair(1, "AAA"));
+		m.insert(make_pair(3, "AAA"));
+		m.insert(make_pair(5, "AAA"));
+
+
+		//map<int, string>::iterator 가 auto로 자동 대입시켜줌.
+		auto it = m.find(3); // 얼마나 효율적인가? 
+		
+		if (it != m.end()) // 데이터를 찾은 경우
+		{
+			cout << endl;
+			cout << "key 값 : " << it->first << "Value 값 : " << it->second << endl;
+		}
+
+		set<int> s;			// key가 곧 value
+		multimap<int, string> mm;  // 중복을 허용.
+		multiset<int> ms;
+
+	}
+
+	// 선형 자료구조 - 삽입 삭제 접근 효율 - vector
+	// 연관 컨테이너 - 탐색 : map  find
+	 
+	// 숫자 맞추기 게임 (up & down) - logN
+	// 1 2 3 4 ~ 10
+	// n의 크기가 크면 클수록 앞에서부터 쭉찾는 방식보다는 다른 방식이 효율적이다.	
+	// Binary Search (이진 탐색)
+
+	{
+		BinarySearch(7); 
+	}
+
+	// 정렬이 되어 있어야 logN 시간 처리 가능.
+	// 정렬되어 있지 않은 컨테이너를 정렬하는 방법.
+	// 버블, 선택, 삽입
+	// 머지, 힙, 퀵
+
+	// 정렬 + BS => 정렬 비용 ?
 }
-
-// Maze 적용은 하지 않을 예정.
-// BFS-> 다익스트라 모든 간선의 비용이 1인 것과 같다.
-// AStar-> 다익스트라 + @ // 

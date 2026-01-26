@@ -3,16 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{83819162-3504-42FA-A008-1CC881A206F8}|Maze\\Maze.vcxproj|C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\Maze\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{83819162-3504-42FA-A008-1CC881A206F8}|Maze\\Maze.vcxproj|solutionrelative:Maze\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{83819162-3504-42FA-A008-1CC881A206F8}|Maze\\Maze.vcxproj|C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\Maze\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{83819162-3504-42FA-A008-1CC881A206F8}|Maze\\Maze.vcxproj|solutionrelative:Maze\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{83819162-3504-42FA-A008-1CC881A206F8}|Maze\\Maze.vcxproj|C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\Maze\\pch.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{83819162-3504-42FA-A008-1CC881A206F8}|Maze\\Maze.vcxproj|solutionrelative:Maze\\pch.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{A6D6DDA1-2A25-4268-BB15-6786E051D8C8}|Algorithm\\Algorithm.vcxproj|C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\Algorithm\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A6D6DDA1-2A25-4268-BB15-6786E051D8C8}|Algorithm\\Algorithm.vcxproj|solutionrelative:Algorithm\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,51 +14,19 @@
       "DocumentGroups": [
         {
           "DockedWidth": 198,
-          "SelectedChildIndex": 1,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "pch.h",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\Maze\\pch.h",
-              "RelativeDocumentMoniker": "Maze\\pch.h",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\Maze\\pch.h",
-              "RelativeToolTip": "Maze\\pch.h",
-              "ViewState": "AgIAABMAAAAAAAAAAAAAABwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-01-23T07:48:00.884Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Player.h",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\Maze\\Player.h",
-              "RelativeDocumentMoniker": "Maze\\Player.h",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\Maze\\Player.h",
-              "RelativeToolTip": "Maze\\Player.h",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAACIAAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-01-23T07:01:08.286Z",
-              "EditorCaption": ""
-            }
-          ]
-        },
-        {
-          "DockedWidth": 202,
           "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Player.cpp",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\Maze\\Player.cpp",
-              "RelativeDocumentMoniker": "Maze\\Player.cpp",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\Maze\\Player.cpp",
-              "RelativeToolTip": "Maze\\Player.cpp",
-              "ViewState": "AgIAAB0BAAAAAAAAAAAAACkBAAABAAAAAAAAAA==",
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\Algorithm\\main.cpp",
+              "RelativeDocumentMoniker": "Algorithm\\main.cpp",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\Algorithm\\main.cpp",
+              "RelativeToolTip": "Algorithm\\main.cpp",
+              "ViewState": "AgIAACsAAAAAAAAAAAAAACYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-01-23T07:01:05.896Z",
+              "WhenOpened": "2026-01-26T07:03:37.669Z",
               "EditorCaption": ""
             }
           ]
