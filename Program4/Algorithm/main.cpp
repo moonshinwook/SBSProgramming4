@@ -12,182 +12,203 @@
 
 using namespace std;
 
-// 자료구조. 선형 
-// vector, list, deque(원리 정도 이해하기)
+// 버블 선택 삽입
+// 버블
+// bubble - 가장 큰 숫자를 위로 보내겠다. 
+// [4][1][3][2][5] 
 
-// 데이터 삽입, 삭제(앞, 중간, 뒤) : 시간
-// 데이터 삭제
-// 임의 접근
-
-// deque - stack, queue 컨테이너로 사용된다. 
-// deque는 vector, list 장점을 합쳐놓은 녀석이다.
-// 시간, 공간
-
-void BinarySearch(int n)
+// O(n) - n^2
+void BubbleSort(vector<int>& v)
 {
-	// 1 ~ 10까지 중에 숫자 찾기 로직 만들기.
+	int n = v.size();
 
-	vector<int> v{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-	int left = 0;
-	int right = v.size() - 1;
-
-	int mid = (left + right) / 2;
-
-	while (left <= right)
+	for (int i = 0; i < n - 1; i++)
 	{
-		if()
-
+		for (int j = 0; j < n - 1; j++)
+		{
+			if (v[j] > v[j + 1])
+			{
+				::swap(v[j], v[j + 1]);
+			}
+		}
 	}
-
-	//vector<int> v{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }; // 1 + 10 == 11 / 2 = 5(정수만) 
-	//int left = 0;
-	//int right = v.size() - 1;
-	//
-	//bool _flag = false;
-	//while (left <= right)         // 1, 2        0 + 1 / 2 = 0
-	//{
-	//	cout << "탐색 Search Range " << left << " - " << right << endl; // 디버깅
-	//	int mid = (left + right) / 2;
-	//	if (v[mid] > n)
-	//	{
-	//		cout << n << " < " << v[mid] << endl;
-	//		right = mid - 1;
-	//	}
-	//	else if (v[mid] < n)
-	//	{
-	//		cout << n << " > " << v[mid] << endl;
-	//		left = mid + 1;
-	//	}
-	//	else
-	//	{
-	//		cout << "Find! " << endl;
-	//		break;
-	//	}
-	//}
-	//if (_flag == false)
-	//	cout << "데이터를 찾을 수 없습니다." << endl;
-	//
 }
 
+//int n = v.size();
+//
+//for (int i = 0; i < n - 1; i++)
+//{
+//	for (int j = 0; j < n - 1; j++)
+//	{
+//		if (v[j] > v[j + 1])
+//		{
+//			::swap(v[j], v[j + 1]);
+//		}
+//	}
+//}
+
+// 선택 : 작은 것을 앞으로 보내자.
+// [4][1][3][2][5] 5개 중 제일 작은 것을 어떻게 구할래. PQ(mindistance)
+// [1][4][3][2][5] 1회차
+// [1][2][3][4][5]
+
+// n * n = n^2만큼 시간 걸림. -> 버블솔트보다는 효율적. swap을 조금 덜해서
+void selectSort(vector<int>& v)
+{
+	int n = v.size();
+
+	for (int i = 0; i < n - 1; i++)
+	{
+		int bestIdx = i;
+
+		for (int j = i + 1; j < n; j++)
+		{
+			if (v[j] < v[bestIdx])
+				bestIdx = j;
+		}
+		swap(v[i], v[bestIdx]);
+	}
+}
+
+// 삽입
+// [4] | [1] [3] [2] [5] 
+// 정렬 | 비정렬
+// 1 4 | 3 2 5
+// 1 3 4 | 2 5
+// 1 2 3 4 | 5
+// 1 2 3 4 5
+
+
+
+// n * n = n^2
+// 특별한 case : 데이터가 거의 정렬이 되어 있으면 효율적이다.  
+void Insertsort(vector<int>& v)
+{
+	int n = v.size();
+
+	for (int i = 1; i < n; i++)
+	{
+		int insertData = v[i];
+
+		int j; // 루프가 끝나더라도 사용 가능.
+		for (j = i - 1; j >= 0; j--)
+		{// 스택 영역 (루프를 돈 뒤 사라지는 영역)
+			if (v[j] > insertData)
+				v[j + 1] = v[j];
+			else // [i] j 값이 작으면 내위치
+				break;
+
+			
+		}
+		v[j + 1] = insertData;
+	}
+}
+
+// 순차 컨테이너 (vector, list, deque) - 정렬되지 않은 데이터가 들어온다. 
+
+// 머지, 힙, 퀵 sort 
+// greater - 작은 것 위, less 큰 것이 위
+
+// 
+void HeapSort(vector<int>& v)
+{
+	priority_queue<int, vector<int>, greater<int>> pq;
+
+	// n * logN 
+	for (int num : v)
+		pq.push(num);
+
+	v.clear();
+
+	// N * logN
+	while (pq.empty() == false)
+	{
+		int count = pq.top();
+		pq.pop();
+		v.push_back(count);
+	}
+
+
+}
+// 2nlogN -> nlogN시간이 걸린다.  2는 무시
+
+// 합병 (merge)
+
+// Divide and conquer 분할 정복
+// 4 3 1 9 7
+void MergeResult(vector<int>& v, int left, int mid, int right)
+{
+	int leftIdx = left;
+	int rightIdx = mid + 1;
+
+	vector<int> temp;
+
+	while (leftIdx <= mid && rightIdx <= right)
+	{
+		if (v[leftIdx] < v[rightIdx])
+		{
+			temp.push_back(v[leftIdx]);
+			leftIdx++;
+		}
+		else
+		{
+			temp.push_back(v[rightIdx]);
+			rightIdx++;
+		}
+
+	}
+	
+	// 왼쪽이 먼저 끝났을 때
+	if (leftIdx >= mid)
+	{
+		while (rightIdx <= right)
+		{
+			temp.push_back(v[rightIdx]);
+			rightIdx++;
+		}
+	}
+	else 
+	{
+		while (leftIdx <= mid)
+		{
+			temp.push_back(v[leftIdx]);
+			leftIdx++;
+		}
+	}
+		
+	// temp -> vector 넣어준다
+	for (int i = 0; i < temp.size(); i++)
+		v[left + 1] = temp[i];
+
+}
+
+// n * logN
+void MergeSort(vector<int>& v, int left, int right)
+{
+	if (left >= right)
+		return;
+
+	int mid = (left + right) / 2;
+	MergeSort(v, left, mid);
+	MergeSort(v, mid + 1, right);
+	
+	MergeResult(v, left, mid, right);
+}
 
 int main()
 {
-#pragma region deque
-	vector<int> v;
-	v.push_back(1);
-
-	queue<int> q;
-	q.push(1);
-
-	deque<int> dq;
-	dq.push_back(1);
-	dq.push_back(2);
-	dq.push_back(3);
-	dq.push_back(4);
-
-	dq.push_back(5);
-	dq.push_back(6);
-
-	dq.push_front(5);
-
-	while (dq.empty() == false)
+	vector<int> v{ 4,1,3,2,5 };
+	srand(time(0));
+	for(int i = 0; i < 10; i++)
+		v.push_back(rand() % 100);
+	// TODO 정렬하기 
+	//BubbleSort(v);
+	//selectSort(v);
+	//Insertsort(v);
+	// HeapSort(v);
+	MergeSort(v, 0, v.size() - 1);
+	for(const auto & a : v)
 	{
-		int count = dq.front();
-		dq.pop_front();
-		cout << count << " ";
-
+		cout << a << " ";
 	}
-#pragma endregion
-
-	// -----------------------------------------------------
-	// Q. 
-
-	struct Item
-	{
-		int id;
-		string name;
-	};
-
-	{
-		vector<Item> items;
-		items.push_back(Item{ 1, "AAA" });
-	}
-	// pair type 
-	{
-		pair<int, string> item(make_pair(2, "DDD"));
-
-		cout << endl;
-		cout << item.first << endl;		// vector<int> 데이터 삽입, 삭제, 정렬, 검색		-> second
-		cout << item.second << endl;
-
-		// 아이템 번호가 999인 데이터를 찾아서, 그 데이터를 플레이어에게 전달해줘.
-
-		vector<pair<int, string>> items;
-
-		items.push_back(item);
-		items.push_back(make_pair(1, "AAA")); // token
-		items.push_back(make_pair(3, "BBB"));
-		items.push_back(make_pair(5, "CCC"));
-
-		// 1, 2, 3, 4, 5 아이템들이 이다. 아이템이 3인 녀석을 찾아서 코드를 출력해줘.
-		// 비용 최소화 방법.
-		// 빅오 표기법, 어떤 조건(정렬이 되었을 때) 아래에서 logN의 효율을 가지고 탐색할 수 있는 BS (Binary Search)
-		// O(logN) - 이번 주의 목표
-		for (auto it = items.begin(); it != items.end(); ++it)
-		{
-			if (3 == it->first)
-			{
-				cout << it->second << endl;
-			}
-			else
-			{
-				continue;
-			}
-
-		}
-
-	}
-
-	// vector - map - hash table(unordered map) 99% 사용
-	// 연관 컨테이너
-	{
-		map<int, string> m;
-		m.insert(make_pair(1, "AAA"));
-		m.insert(make_pair(3, "AAA"));
-		m.insert(make_pair(5, "AAA"));
-
-
-		//map<int, string>::iterator 가 auto로 자동 대입시켜줌.
-		auto it = m.find(3); // 얼마나 효율적인가? 
-		
-		if (it != m.end()) // 데이터를 찾은 경우
-		{
-			cout << endl;
-			cout << "key 값 : " << it->first << "Value 값 : " << it->second << endl;
-		}
-
-		set<int> s;			// key가 곧 value
-		multimap<int, string> mm;  // 중복을 허용.
-		multiset<int> ms;
-
-	}
-
-	// 선형 자료구조 - 삽입 삭제 접근 효율 - vector
-	// 연관 컨테이너 - 탐색 : map  find
-	 
-	// 숫자 맞추기 게임 (up & down) - logN
-	// 1 2 3 4 ~ 10
-	// n의 크기가 크면 클수록 앞에서부터 쭉찾는 방식보다는 다른 방식이 효율적이다.	
-	// Binary Search (이진 탐색)
-
-	{
-		BinarySearch(7); 
-	}
-
-	// 정렬이 되어 있어야 logN 시간 처리 가능.
-	// 정렬되어 있지 않은 컨테이너를 정렬하는 방법.
-	// 버블, 선택, 삽입
-	// 머지, 힙, 퀵
-
-	// 정렬 + BS => 정렬 비용 ?
 }
