@@ -9,275 +9,139 @@
 #include <queue>
 #include <unordered_map>
 #include <algorithm>
+#include <Windows.h>
 
 using namespace std;
 
-// 버블 선택 삽입
-// 버블
-// bubble - 가장 큰 숫자를 위로 보내겠다. 
-// [4][1][3][2][5] 
+// 탐색에서 더 효율적인 컨테이너.
+// 트리 -> 계층을 갖는 vertex와 edge
+// 이진트리. 이진 탐색
+// 트리를 어떤 방식으로 순회 - BFS DFS
+// [Pre, In, Post] Order
 
-// O(n) - n^2
-void BubbleSort(vector<int>& v)
+//		insert(10) 
+//		insert(5) (10) (15)
+//		root(10)
+//			5	15
+//	
+
+void SetCursorPosition(int x, int y)
 {
-	int n = v.size();
-
-	for (int i = 0; i < n - 1; i++)
-	{
-		for (int j = 0; j < n - 1; j++)
-		{
-			if (v[j] > v[j + 1])
-			{
-				::swap(v[j], v[j + 1]);
-			}
-		}
-	}
+	// :: 전역으로 존재하는 것, 개인적으로 만든 것이 아님을 정의
+	HANDLE output = ::GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD pos = { static_cast<SHORT>(x),static_cast<SHORT>(y) };
+	SetConsoleCursorPosition(output, pos);
 }
 
-//int n = v.size();
-//
-//for (int i = 0; i < n - 1; i++)
-//{
-//	for (int j = 0; j < n - 1; j++)
-//	{
-//		if (v[j] > v[j + 1])
-//		{
-//			::swap(v[j], v[j + 1]);
-//		}
-//	}
-//}
 
-// 선택 : 작은 것을 앞으로 보내자.
-// [4][1][3][2][5] 5개 중 제일 작은 것을 어떻게 구할래. PQ(mindistance)
-// [1][4][3][2][5] 1회차
-// [1][2][3][4][5]
-
-// n * n = n^2만큼 시간 걸림. -> 버블솔트보다는 효율적. swap을 조금 덜해서
-void selectSort(vector<int>& v)
+struct Node
 {
-	int n = v.size();
+	Node* parent = nullptr;
+	Node* left = nullptr;
+	Node* right = nullptr;
+	int key = {};
+};
 
-	for (int i = 0; i < n - 1; i++)
-	{
-		int bestIdx = i;
-
-		for (int j = i + 1; j < n; j++)
-		{
-			if (v[j] < v[bestIdx])
-				bestIdx = j;
-		}
-		swap(v[i], v[bestIdx]);
-	}
-}
-
-// 삽입
-// [4] | [1] [3] [2] [5] 
-// 정렬 | 비정렬
-// 1 4 | 3 2 5
-// 1 3 4 | 2 5
-// 1 2 3 4 | 5
-// 1 2 3 4 5
-
-
-
-// n * n = n^2
-// 특별한 case : 데이터가 거의 정렬이 되어 있으면 효율적이다.  
-void Insertsort(vector<int>& v)
+class BinarySearchTree
 {
-	int n = v.size();
+public:
 
-	for (int i = 1; i < n; i++)
+	void Print()
 	{
-		int insertData = v[i];
-
-		int j; // 루프가 끝나더라도 사용 가능.
-		for (j = i - 1; j >= 0; j--)
-		{// 스택 영역 (루프를 돈 뒤 사라지는 영역)
-			if (v[j] > insertData)
-				v[j + 1] = v[j];
-			else // [i] j 값이 작으면 내위치
-				break;
-
-			
-		}
-		v[j + 1] = insertData;
-	}
-}
-
-// 순차 컨테이너 (vector, list, deque) - 정렬되지 않은 데이터가 들어온다. 
-
-// 머지, 힙, 퀵 sort 
-// greater - 작은 것 위, less 큰 것이 위
-
- 
-void HeapSort(vector<int>& v)
-{
-	priority_queue<int, vector<int>, greater<int>> pq;
-
-	// n * logN 
-	for (int num : v)
-		pq.push(num);
-
-	v.clear();
-
-	// N * logN
-	while (pq.empty() == false)
-	{
-		int count = pq.top();
-		pq.pop();
-		v.push_back(count);
+		Print(_root, 10, 0);
 	}
 
-
-}
-// 2nlogN -> nlogN시간이 걸린다.  2는 무시
-
-// 합병 (merge)
-
-// Divide and conquer 분할 정복
-// 4 3 1 9 7
-void MergeResult(vector<int>& v, int left, int mid, int right)
-{
-	int leftIdx = left;
-	int rightIdx = mid + 1;
-
-	vector<int> temp;
-
-	while (leftIdx <= mid && rightIdx <= right)
+	void insert(int key)
 	{
-		if (v[leftIdx] < v[rightIdx])
+		// 첫번째 노드가 삽입됐을 때
+		Node* newNode = new Node();
+		newNode->key = key;
+
+		if (_root == nullptr)
 		{
-			temp.push_back(v[leftIdx]);
-			leftIdx++;
+			_root = newNode;
+			return;
 		}
-		else
-		{
-			temp.push_back(v[rightIdx]);
-			rightIdx++;
-		}
-
-	}
-	
-	// 왼쪽이 먼저 끝났을 때
-	if (leftIdx >= mid)
-	{
-		while (rightIdx <= right)
-		{
-			temp.push_back(v[rightIdx]);
-			rightIdx++;
-		}
-	}
-	else 
-	{
-		while (leftIdx <= mid)
-		{
-			temp.push_back(v[leftIdx]);
-			leftIdx++;
-		}
-	}
 		
-	// temp -> vector 넣어준다
-	for (int i = 0; i < temp.size(); i++)
-		v[left + i] = temp[i];			// + 1로 하여 정렬이 안됌. +i로 고쳐 정렬 가능
+		Node* node = _root;
+		Node* parent = nullptr;
 
-}
+		while (node)	// 리프노드가 아니면 계속 반복해라. 리프(자식이 없는)
+		{
+			parent = node;
+			if (key < node->key)
+				node = node->left;
+			else
+				node = node->right;
+		}
+		 
+		newNode->parent = parent;
+		
+		if (key < parent->key)
+			parent->left = newNode;
+		else
+			parent->right = newNode;
 
-// n * logN
-void MergeSort(vector<int>& v, int left, int right)
-{
-	if (left >= right)
-		return;
-
-	int mid = (left + right) / 2;
-	MergeSort(v, left, mid);
-	MergeSort(v, mid + 1, right);
-	
-	MergeResult(v, left, mid, right);
-}
-
-// 힙, Merge, quick
-// quick - 
-// merge -> middle
-// 피벗 빠르게 선택했다. 
-
-// pivot
-
-// [5] | [1][3][7][9][2][4][6][8]
-// P	  l                    h	pivot 어느 위치에 있으면 가장 어울릴까?
-//		[1][3][4][9][2][7][6][8]
-//		[1][3][4][2][9][7][6][8]
-//		[2][1][3][4][5][9][7][6][8]
-//   
-// 1> low high low->	<-high	pivot값			<-[5]->
-// //  v[low] <= p	     v[high] >= p
-// 2> low indext값(2)  <  high(5)	swap
-// 3> swap(v[left], v[h])
-
-// Heap vs Merge vs Q [sort]
-// nlogn			n^2, nlogn
-// nlogn 시간을 갖는다. 
-// 대부분 퀵솔트로 시간적으로 별로임. 대신 공간적으로 효율 시간과 공간의 반비례, 따로 메모리 사용을 하지 않는다. 
-// Merge의 경우 temp를 사용하여 메모리 사용, Heap은 PQ 사용으로 메모리 사용. 시간 절약을 위해, 공간 사용.
-
-int Partition(vector<int>& v, int left, int right) // 퀵솔트의 핵심코드
-{
-	int pivot = v[left];
-	int low = left + 1;
-	int high = right;
-	
-	// pivot의 수에 따라 결과가 달라짐. 최하(pivot이 제일 작거나 제일 큰 경우) (N) - logN 까지 시간경과 범위 있음.
-	// 대략 n^2 ~ nlogN 시간 범위
-	while (low <= high)
-	{
-		while (low <= right && pivot >= v[low])			// 배열 범위 && 피벗 비교
-			low++;
-		while (high >= left + 1 && pivot <= v[high])	// 배열 범위 && 피벗 비교
-			high--;
-		if (low < high)
-			swap(v[low], v[high]);
 	}
-	
-	
-	swap(v[left], v[high]);
-	return high;										// 피벗이 위치해야할 index값
-}
+	Node* find(Node* node, int key)
+	{
+		if (node == nullptr || node->key)
+			return node;
 
-void QuickSort(vector<int>& v, int left, int right)
-{
-	if (left > right)
-		return;
+		if (key < node->key)
+			return find(node->left, key);
+		else
+			return find(node->right, key);
 
-	int pivot = Partition(v, left, right);
-	QuickSort(v, left, pivot - 1);						// 왼쪽 파트 재귀
-	QuickSort(v, pivot + 1, right);						// 오른쪽 파트 재귀
+	}
 
-}
+	Node* find(int key)
+	{
+		return find(_root, key);
+	}
 
-// 탐색. N 전수 조사는 N시간이 걸린다. 
-// nlogn * logn = nlog(n제곱)
+private:
+	void Print(Node* node, int x, int y)
+	{
+		if (node == nullptr)
+			return;
+
+		SetCursorPosition(x, y);
+		cout << node->key;
+		Print(node->left, x - (5 / (y + 1)), y + 1);
+		Print(node->right, x + (5 / (y + 1)), y + 1);
+	}
+
+private:
+	Node* _root = nullptr;
+
+
+};
+
+// 탐색 -> BST [트리 불균형의 경우] -> N과 비슷. 잘 사용 안 함. -> 균형을 잡아주는 알고리즘을 활용하여 실용버전 필요.
+// 대부분의 케이스에 logN 탐색으로 찾을 수 있다. 
+// map << find logn으로 찾을 수 있다.
+
+
+// Hash Table
+// vector, unordered_map
+
 int main()
 {
-	vector<int> v{ 4,1,3,2,5 };
-	srand(time(0));
-	for(int i = 0; i < 10; i++)
-		v.push_back(rand() % 100);
-	// TODO 정렬하기 
-	//BubbleSort(v);
-	//selectSort(v);
-	//Insertsort(v);
-	//HeapSort(v);
-	//MergeSort(v, 0, v.size() - 1);
-	QuickSort(v, 0, v.size() - 1); // [1] 1 0 
+	BinarySearchTree bst;
 
-	// 연관 컨테이너 - 탐색
-	// 보통 logN 시간 걸림.
-	// 추가. logN <<<< 로딩. 
-	//				실제 게임에서의 렉
-	// 
-	// 탐색 시간이 빠르다. logN이 걸림. < nlogN
+	bst.insert(20);
+	bst.insert(10);
+	bst.insert(30);
+	bst.insert(50);
+	bst.insert(70);
+	bst.insert(15);
+	bst.insert(90);
+	bst.insert(110);
 
-	for(const auto & a : v)
-	{
-		cout << a << " ";
-	}
+
+	// bst.Print();
+
+	Node* findNode = bst.find(10);
+	cout << findNode->key << endl;
 }
