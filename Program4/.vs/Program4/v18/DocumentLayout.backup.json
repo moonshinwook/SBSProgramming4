@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\msw47\\\uBC14\uD0D5 \uD654\uBA74\\SBSProgramming4\\Program4\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{25D916A0-AA5B-494B-A816-496FAB1D9C06}|Practice\\Practice.vcxproj|C:\\Users\\msw47\\\uBC14\uD0D5 \uD654\uBA74\\SBSProgramming4\\Program4\\Practice\\Practice_main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{25D916A0-AA5B-494B-A816-496FAB1D9C06}|Practice\\Practice.vcxproj|solutionrelative:Practice\\Practice_main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{A6D6DDA1-2A25-4268-BB15-6786E051D8C8}|Algorithm\\Algorithm.vcxproj|C:\\Users\\msw47\\\uBC14\uD0D5 \uD654\uBA74\\SBSProgramming4\\Program4\\Algorithm\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A6D6DDA1-2A25-4268-BB15-6786E051D8C8}|Algorithm\\Algorithm.vcxproj|solutionrelative:Algorithm\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -19,14 +19,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Practice_main.cpp",
-              "DocumentMoniker": "C:\\Users\\msw47\\\uBC14\uD0D5 \uD654\uBA74\\SBSProgramming4\\Program4\\Practice\\Practice_main.cpp",
-              "RelativeDocumentMoniker": "Practice\\Practice_main.cpp",
-              "ToolTip": "C:\\Users\\msw47\\\uBC14\uD0D5 \uD654\uBA74\\SBSProgramming4\\Program4\\Practice\\Practice_main.cpp",
-              "RelativeToolTip": "Practice\\Practice_main.cpp",
-              "ViewState": "AgIAADAAAAAAAAAAAAAAADoAAAAeAAAAAAAAAA==",
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\Users\\msw47\\\uBC14\uD0D5 \uD654\uBA74\\SBSProgramming4\\Program4\\Algorithm\\main.cpp",
+              "RelativeDocumentMoniker": "Algorithm\\main.cpp",
+              "ToolTip": "C:\\Users\\msw47\\\uBC14\uD0D5 \uD654\uBA74\\SBSProgramming4\\Program4\\Algorithm\\main.cpp",
+              "RelativeToolTip": "Algorithm\\main.cpp",
+              "ViewState": "AgIAAGMAAAAAAAAAAAAAAGsAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-01-23T04:16:43.612Z",
+              "WhenOpened": "2026-01-29T16:27:18.033Z",
               "EditorCaption": ""
             }
           ]
