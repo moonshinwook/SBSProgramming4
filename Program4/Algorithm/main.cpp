@@ -14,132 +14,111 @@
 
 using namespace std;
 
-// new - delete => 
+// MST
+// 최소 스패닝 트리 : 그래프 BFS, DFS -> 
+// Q? 정점	간선 . 정점들 사이에 최소의 간선 수로 연결을 하는 방법. 최소 비용
+// 
+// 도시 [회사] -도로- [빌딩] []
 
-template <typename T>
-using Uptr = std::unique_ptr<T>;		//	치환 패턴
+// 크루스칼 : 그리드 + 순회가 발생할 때 어떻게 해결 해야하나?
+// Union 합치다. 
+// Find  찾다.
 
-enum class ItemType {WEAPON, ARMOR, CONSUMABLE};
-enum class WeaponType {SWORD, BOW};
-enum class ArmorType {HELMET, ARMOR};
-enum class ConsumableType {POTION};
+// 2개의 서로 다른 팀 존재. 권한. 동맹 시스템.
+// 10팀.
 
-// base 클래스. 
-// ~소멸자 base에서 virtual 선언.
-class Item
+void TeamSolution()
+{
+	struct User
+	{
+		int teamId;
+	};
+
+	vector<User> users;
+	users.resize(10);
+	for (int i = 0; i < 10; i++)
+		users[i].teamId = i;
+
+	// Team0 <-> Team1
+	// 0팀으로 합치겠다. 
+	users[1].teamId = 0;
+
+	// Find  : O(1) 
+	// union : O(n)
+	for (auto& user : users)
+	{
+		if (user.teamId == 1)
+			users[1].teamId = 0;
+	}
+}
+
+// 트리
+// 계층이 있는(부모와 자식) 정점 간선
+
+
+
+//  Union -> merge
+//  Find  -> 
+
+//  u, v, w 
+//	O(1)
+
+// 합치는 것을 배움. -> MST - 크루스칼, 프림 = disjoint set 방식을 써서(union find) cycle 발생했을 때 
+
+class Disjoint
 {
 public:
-	Item(int id, string name) : _id(id), _name(name) {} // ctor입력, 탭을 누르면 단축키 자동완성
-	virtual ~Item() = default;
 
-	virtual void Use() {} // 다형성
-
-public:
-	ItemType _type;
-	int _id;
-	string _name;
-};
-
-class WeaponItem : public Item
-{
-public:
-	WeaponItem(int id, string name, WeaponType wtype, int damage)
-		: Item{id, name }, _wtype(wtype), _damage(damage) 
+	Disjoint(int n) : _parent(n), _rank(n, 1)
 	{
-		_type = ItemType::WEAPON;
+		for (int i = 0; i < n; i++)
+			_parent[i] = i;
 	}
 
-	void Use() override
+	int Find(int u)		// 나의 leader 찾는다. 
 	{
-		// 아이템 장착(Equip)
-		// 무기를 휘둘렀다. 
-		cout << "[" << _name <<"] 사용했다." << "공격력 : " << _damage << endl;
+		if (u == _parent[u])
+			return u;
+
+		Find(_parent[u]);
+	}
+	void Merge(int u, int v)		//
+	{
+		u = Find(u);
+		v = Find(v);
+
+		if (u == v)
+			return;
+		
+
+		if (_rank[u] > _rank[v])
+			swap(u, v);
+	//		[A][A]		    [B]
+	//		[a0][A]			[B0}
+	//		[a1][a0]		[b1][b2]
+	//		
+		_parent[u] = v;
+		if (_rank[u] == _rank[v])
+			_rank[v]++;
 	}
 
-public:
-	WeaponType _wtype;
-	int _damage;
-};
+private:
+	vector<int> _parent;
+	vector<int> _rank;
 
-class ArmorItem : public Item
-{
-public:
-	ArmorItem(int id, string name, ArmorType atype, int defence)
-		: Item{id, name }, _atype(atype), _defence(defence) 
-	{
-		_type = ItemType::ARMOR;
-	}
-
-	void Use() override
-	{
-		// 아이템 장착(Equip)
-		// 무기를 휘둘렀다. 
-		cout << "[" << _name << "] 사용했다." << "방어력 : " << _defence << endl;
-	}
-
-public:
-	ArmorType _atype;
-	int _defence;
-};
-
-class ConsumableItem : public Item
-{
-public:
-	ConsumableItem(int id, string name, ConsumableType ctype, int stack)
-		: Item{id, name }, _ctype(ctype), _stack(_stack) 
-	{
-		_type = ItemType::CONSUMABLE;
-	}
-	void Use() override
-	{
-		// 아이템 장착(Equip)
-		// 무기를 휘둘렀다. 
-		cout << "[" << _name << "] 사용했다." << "갯수 : " << _stack << endl;
-	}
-
-public:
-	ConsumableType _ctype;
-	int _stack;
 };
 
 int main()
 {
-	srand(time(0));
-#pragma region Item
-	unordered_map<int, Uptr<Item>> itemDict;
+	TeamSolution();
 
-	vector<Uptr<WeaponItem>> weapons;
-	vector<Uptr<ArmorItem>> armors;
-	vector<Uptr<ConsumableItem>> consumables;
+	Disjoint teams(1000);
 
-	weapons.push_back(make_unique<WeaponItem>(1, "검", WeaponType::SWORD, 10));
-	weapons.push_back(make_unique<WeaponItem>(2, "활", WeaponType::BOW, 5));
+	teams.Merge(0, 1);
 
-	armors.push_back(make_unique<ArmorItem>(100, "투구", ArmorType::HELMET, 2));
-	armors.push_back(make_unique<ArmorItem>(101, "갑옷", ArmorType::ARMOR, 3));
+	int teamId = teams.Find(0);
+	int teamId2 = teams.Find(1);
 
-	consumables.push_back(make_unique<ConsumableItem>(200, "갑옷", ConsumableType::POTION, 1));
-
-
-	for (auto& w : weapons)
-		itemDict.insert({ w->_id, std::move(w) }); // unique_ptr을 사용해서 move사용
-	for (auto& a : armors)
-		itemDict.insert({ a->_id, std::move(a) });
-	for (auto& c : consumables)
-		itemDict.insert({ c->_id, std::move(c) });
-#pragma endregion 
-
-	if (!itemDict.empty())
-	{
-		int randValue = rand() % itemDict.size();
-		auto it = itemDict.begin();
-
-		advance(it, randValue);		//		iterator 반복문 버전.
-
-		Item* itemTemp = it->second.get();
-
-		cout << "아이템 획득: " << itemTemp->_name << endl;
-
-		itemTemp->Use();
-	}
+	if (teamId == teamId2)
+		cout << "0, 1 팀을 맺었다.";
 }
