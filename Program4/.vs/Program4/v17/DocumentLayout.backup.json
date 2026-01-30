@@ -5,6 +5,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{A6D6DDA1-2A25-4268-BB15-6786E051D8C8}|Algorithm\\Algorithm.vcxproj|C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\Algorithm\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A6D6DDA1-2A25-4268-BB15-6786E051D8C8}|Algorithm\\Algorithm.vcxproj|solutionrelative:Algorithm\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83819162-3504-42FA-A008-1CC881A206F8}|Maze\\Maze.vcxproj|C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\Maze\\Board.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{83819162-3504-42FA-A008-1CC881A206F8}|Maze\\Maze.vcxproj|solutionrelative:Maze\\Board.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,8 +18,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 198,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Board.cpp",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\Maze\\Board.cpp",
+              "RelativeDocumentMoniker": "Maze\\Board.cpp",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\Maze\\Board.cpp",
+              "RelativeToolTip": "Maze\\Board.cpp",
+              "ViewState": "AgIAAH4AAAAAAAAAAAAAAC0AAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-01-30T08:37:48.103Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -24,7 +41,7 @@
               "RelativeDocumentMoniker": "Algorithm\\main.cpp",
               "ToolTip": "C:\\Users\\Administrator\\Desktop\\SBSProgramming4\\Program4\\Algorithm\\main.cpp",
               "RelativeToolTip": "Algorithm\\main.cpp",
-              "ViewState": "AgIAAGYAAAAAAAAAAAAAAHAAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-01-27T06:58:26.269Z",
               "EditorCaption": ""

@@ -14,57 +14,6 @@
 
 using namespace std;
 
-// MST
-// 최소 스패닝 트리 : 그래프 BFS, DFS -> 
-// Q? 정점	간선 . 정점들 사이에 최소의 간선 수로 연결을 하는 방법. 최소 비용
-// 
-// 도시 [회사] -도로- [빌딩] []
-
-// 크루스칼 : 그리드 + 순회가 발생할 때 어떻게 해결 해야하나?
-// Union 합치다. 
-// Find  찾다.
-
-// 2개의 서로 다른 팀 존재. 권한. 동맹 시스템.
-// 10팀.
-
-void TeamSolution()
-{
-	struct User
-	{
-		int teamId;
-	};
-
-	vector<User> users;
-	users.resize(10);
-	for (int i = 0; i < 10; i++)
-		users[i].teamId = i;
-
-	// Team0 <-> Team1
-	// 0팀으로 합치겠다. 
-	users[1].teamId = 0;
-
-	// Find  : O(1) 
-	// union : O(n)
-	for (auto& user : users)
-	{
-		if (user.teamId == 1)
-			users[1].teamId = 0;
-	}
-}
-
-// 트리
-// 계층이 있는(부모와 자식) 정점 간선
-
-
-
-//  Union -> merge
-//  Find  -> 
-
-//  u, v, w 
-//	O(1)
-
-// 합치는 것을 배움. -> MST - 크루스칼, 프림 = disjoint set 방식을 써서(union find) cycle 발생했을 때 
-
 class Disjoint
 {
 public:
@@ -108,17 +57,103 @@ private:
 
 };
 
+
+vector<vector<int>> adjacent;
+
+void CreateGraph()
+{
+	adjacent = vector<vector<int>>(7, vector<int>(7, -1));
+
+	adjacent[0][1] = adjacent [1][0] = 67;
+	adjacent[0][3] = adjacent [3][0] = 28;
+	adjacent[0][4] = adjacent [4][0] = 17;
+	adjacent[0][6] = adjacent [1][0] = 12;
+	adjacent[1][3] = adjacent [3][1] = 24;
+	adjacent[1][4] = adjacent [4][1] = 62;
+	adjacent[2][4] = adjacent [4][2] = 20;
+	adjacent[2][5] = adjacent [5][2] = 37;
+	adjacent[3][6] = adjacent [6][3] = 13;
+	adjacent[4][5] = adjacent [5][4] = 45;
+	adjacent[4][6] = adjacent [6][4] = 28;
+	
+}
+
+struct CostEdge
+{
+	int cost; 
+	int u;
+	int v;
+
+	bool operator<(CostEdge& other)
+	{
+		return cost < other.cost;
+	}
+};
+
+int Kruskal(vector<CostEdge>& select)  // 모든 간선을 최소의 갯수로 연결을 하고 그 비용이 최소가 되는 값 MST
+{
+	int ret = 0;
+
+	select.clear();
+
+	vector<CostEdge> edges;
+
+	for (int u = 0; u < adjacent.size(); u++)
+	{
+		for (int v = 0; v < adjacent[u].size(); v++)
+		{
+			if (u > v)
+				continue; // 하나만 처리 뒤집은 경우 같아서
+
+			int cost = adjacent[u][v];
+			if (cost == -1)
+				continue;
+
+			edges.push_back(CostEdge{ cost, u, v });
+
+		}
+	}
+
+	sort(edges.begin(), edges.end());
+
+	Disjoint sets(7);
+
+	// u, v 어디에 저장했는가?
+	// edge 타입 -> u, v 꺼내서 부모가 같냐? 아니냐? 
+
+	for (auto& edge : edges)
+	{
+		if(sets.Find(edge.u) == sets.Find(edge.v)) // disjoint 덕분에 코드 개선
+			continue;
+
+		sets.Merge(edge.u, edge.v);
+		select.push_back(edge);
+		ret += edge.cost;	
+	}
+
+	return ret;
+}
+
+
 int main()
 {
-	TeamSolution();
+	CreateGraph();
+	vector<CostEdge> select;
+	int cost = Kruskal(select);
 
-	Disjoint teams(1000);
-
-	teams.Merge(0, 1);
-
-	int teamId = teams.Find(0);
-	int teamId2 = teams.Find(1);
-
-	if (teamId == teamId2)
-		cout << "0, 1 팀을 맺었다.";
+	cout << "MST : " << cost << endl;
 }
+
+
+// MST
+// 싼 것들만 연결해서 그게 사이클이 안 생기면 되지 않을까?
+// Greedy 탐욕법
+// -> 현재 상황에서 최선의 케이스만 선택을 하면 답에 근접한다. 
+// Disjoint set (서로소 집합) - 두 개의 집합을 합칠 때.. Find - Union(부모가 다르니까 합칠 수 있다)
+
+// 프림 알고리즘
+// 사이클 생기는 걸 판별 
+// Cost 비용 계산.
+
+// 도전과제
+// Maze 프로젝트 적용
