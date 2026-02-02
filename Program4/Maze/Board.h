@@ -41,5 +41,7 @@ private:
 	
 	void					BinaryTree();
 	void					BadMap();
+	void					Kruskal();
+	void					Prim();
 };
 

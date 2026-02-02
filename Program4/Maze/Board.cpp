@@ -2,6 +2,10 @@
 #include "Board.h"
 #include "ConsoleHelper.h"
 #include "Player.h"
+#include <algorithm>
+#include "Disjoint.h"
+#include <map>
+#include <queue>
 
 
 Board::Board()
@@ -43,8 +47,10 @@ void Board::Render()
 // binary Tree
 void Board::GenerateMap()
 {
-	BinaryTree();
+	//BinaryTree();
 	//BadMap();
+	//Kruskal();
+	Prim();
 }
 
 TileType Board::GetTileType(Pos pos)
@@ -143,6 +149,201 @@ void Board::BadMap()
 
 	}
 }
+
+void Board::Kruskal()
+{
+	for (int y = 0; y < _size; y++)
+	{
+		for (int x = 0; x < _size; x++)
+		{
+			if (y % 2 == 0 || x % 2 == 0)
+				_tile[y][x] = TileType::WALL;
+			else
+				_tile[y][x] = TileType::EMPTY;
+		}
+	}
+	// TODO : 점과 점을 연결하는 (WALL) 간선. 비용. 랜덤 설정하겠다. 
+	struct CostEdge
+	{
+		bool operator<(const CostEdge& other) { return cost < other.cost; }
+
+		int cost;
+		Pos u;
+		Pos v;
+
+	};
+
+	vector<CostEdge> edges;
+
+	for (int y = 0; y < _size; y++)
+	{
+		for (int x = 0; x < _size; x++)
+		{
+			if (y % 2 == 0 || x % 2 == 0)
+				continue;
+
+			// 오른쪽
+			if (x < _size - 2)
+			{
+				int randValue = rand() % 100; // 코스트
+
+				edges.push_back(CostEdge{ randValue, Pos{y, x}, Pos{y,x + 2} });
+			}
+
+			// 왼쪽(각각 따로 만들기 때문에 if)
+			if (y < _size - 2)
+			{
+				int randValue = rand() % 100; // 코스트
+
+				edges.push_back(CostEdge{ randValue, Pos{y + 2, x}, Pos{y,x} });
+			}
+		}
+	}
+
+	sort(edges.begin(), edges.end());
+
+	Disjoint sets(_size * _size);
+
+	// u, v => Pos데이터 파싱. disjoint int Pos => int 변환한다 Parse
+	// 5, 5 => int ?
+	// y의 값 곱하기 x 더하기 
+
+	for (auto& edge : edges)
+	{
+		int u = edge.u.y * _size + edge.u.x;
+		int v = edge.v.y * _size + edge.v.x;
+
+		if (sets.Find(u) == sets.Find(v))
+			continue;
+
+		sets.Merge(u, v);
+		// [u][walls][v]
+		int y = (edge.u.y + edge.v.y) / 2;
+		int x = (edge.u.x + edge.v.x) / 2;
+		_tile[y][x] = TileType::EMPTY;
+	}
+}
+
+void Board::Prim()
+{
+	struct CostEdge
+	{
+		bool operator<(const CostEdge& other) const
+		{ 
+			return cost < other.cost; 
+		}
+
+		int cost;
+		Pos vertex;
+
+	};
+
+	for (int y = 0; y < _size; y++)
+	{
+		for (int x = 0; x < _size; x++)
+		{
+			if (y % 2 == 0 || x % 2 == 0)
+				_tile[y][x] = TileType::WALL;
+			else
+				_tile[y][x] = TileType::EMPTY;
+		}
+	}
+
+	// 다익스트라 비슷. 비용을 길마다 최적의 방법을 Best 저장.
+	// map - 이진트리 균형잡힌 (레드블랙트리) 루트를 기준으로 왼쪽 오른쪽 비교
+
+	map<Pos, vector<CostEdge>> edges;
+	
+	// Maze 랜덤하게 가중치를 만들어 준다. 
+	for (int y = 0; y < _size; y++)
+	{
+		for (int x = 0; x < _size; x++)
+		{
+			if (y % 2 == 0 || x % 2 == 0)
+				continue;
+
+			// 오른쪽
+			if (x < _size - 2)
+			{
+				int randValue = rand() % 100; // 코스트
+				
+				Pos u = Pos{ y, x };
+				Pos v = Pos{ y, x + 2 };
+
+				edges[u].push_back(CostEdge{ randValue, v });
+				edges[v].push_back(CostEdge{ randValue, u });
+			}
+
+			// 왼쪽
+			if (y < _size - 2)
+			{
+				int randValue = rand() % 100; // 코스트
+
+				Pos u = Pos{ y, x };
+				Pos v = Pos{ y + 2, x };
+
+				edges[u].push_back(CostEdge{ randValue, v });
+				edges[v].push_back(CostEdge{ randValue, u });
+			}
+		}
+	}
+
+	// Best
+
+	map<Pos, bool> closed;
+	map<Pos, Pos> parent;
+	map<Pos, int> best;
+
+	for (int y = 0; y < _size; y++)
+	{
+		for (int x = 0; x < _size; x++)
+		{
+			best[Pos{ y, x }] = INT32_MAX;
+			closed[Pos{ y, x }] = false;
+		}
+	}
+
+	priority_queue<CostEdge> pq;
+	Pos startPos = Pos{ 1,1 };
+	pq.push(CostEdge{ 0, startPos });
+	parent[startPos] = startPos;
+	best[startPos] = 0;
+
+	while (pq.empty() == false)
+	{
+		CostEdge bestEdge = pq.top();
+		pq.pop();
+
+		Pos v = bestEdge.vertex;
+
+		if (closed[v])
+			continue;
+
+		closed[v] = true;
+
+		{
+			int y = (parent[v].y + v.y) / 2;
+			int x = (parent[v].x + v.x) / 2;
+			_tile[y][x] = TileType::EMPTY;
+		}
+
+		for (CostEdge& edge : edges[v])
+		{
+			if (closed[edge.vertex])
+				continue;
+
+			if (edge.cost > best[edge.vertex])
+				continue;
+
+			//------------------------best 아니다. best 갱신
+			best[edge.vertex] = edge.cost;
+			parent[edge.vertex] = v;
+			pq.push(edge);
+		}
+	}
+
+}
+
 
 
 

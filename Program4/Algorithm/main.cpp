@@ -14,6 +14,8 @@
 
 using namespace std;
 
+// Union : 합친다		
+// Find	 : 찾다.			root 부모 트리(계층)
 class Disjoint
 {
 public:
@@ -37,7 +39,7 @@ public:
 		v = Find(v);
 
 		if (u == v)
-			return;
+			return; // 부모가 합쳐져있어서 무시
 		
 
 		if (_rank[u] > _rank[v])

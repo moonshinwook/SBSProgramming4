@@ -16,8 +16,8 @@ void Player::Init(Board* board)
 	_board = board;
 	//RightHand();
 
-	//BFS();
-	Astar();
+	BFS();
+	//Astar();
 }
 
 void Player::Update(uint64 deltaTick)
