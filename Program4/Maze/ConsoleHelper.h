@@ -8,6 +8,7 @@ enum class ConsoleColor
 	BLUE = FOREGROUND_BLUE,
 	YELLOW = RED | GREEN,
 	WHITE = RED | GREEN | BLUE,
+	MAGENTA = RED | BLUE,         // »¡°­ + ÆÄ¶û (º¸¶ó»ö)
 };
 
 class ConsoleHelper

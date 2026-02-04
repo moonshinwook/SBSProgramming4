@@ -5,7 +5,7 @@
 
 enum
 {
-	MAX_SIZE = 100
+	MAX_SIZE = 30
 };
 
 
@@ -14,9 +14,14 @@ enum class TileType
 	NONE=0,
 	EMPTY,
 	WALL,
+	INVISIBLE,
 };
 
 class player;
+
+struct Monster {
+	Pos pos;
+};
 
 class Board
 {
@@ -34,14 +39,20 @@ public:
 	void					GenerateMap();
 	TileType				GetTileType(Pos pos);
 	ConsoleColor			GetColorByTileType(Pos pos);
+	int32				    _level;
 private:
 	Player*					_player;
 	TileType _tile[MAX_SIZE][MAX_SIZE];
 	int32 _size;
+	vector<Monster>			_monsters;
+	int						_stage = 1; // 현재 스테이지
 	
 	void					BinaryTree();
 	void					BadMap();
 	void					Kruskal();
 	void					Prim();
+	void					UpdateVisibility();
+	void					InitMonster(); // 몬스터 초기 배치
+	void					NextStage();   // 스테이지 업
 };
 

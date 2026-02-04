@@ -20,21 +20,72 @@ void Board::Init(int32 size, Player* player)
 {
 	_size = size;
 	_player = player;
+	_level++;
 	GenerateMap();
+}
+
+void Board::InitMonster() {
+	_monsters.clear();
+	// 스테이지가 올라갈수록 몬스터 수 증가 (기본 1마리 + 스테이지당 1마리)
+	int monsterCount = _stage;
+
+	for (int i = 0; i < monsterCount; i++) {
+		while (true) {
+			int randY = rand() % _size;
+			int randX = rand() % _size;
+
+			// 빈 공간이고, 플레이어 위치가 아니며, 목적지도 아닌 곳에 배치
+			if (GetTileType({ randY, randX }) == TileType::EMPTY &&
+				_player->GetPos() != Pos{ randY, randX } &&
+				GetEndPos() != Pos{ randY, randX })
+			{
+				_monsters.push_back(Monster{ {randY, randX} });
+				break;
+			}
+		}
+	}
+}
+
+void Board::NextStage() {
+	_stage++;
+	// 맵 재생성 로직 후 
+	InitMonster();
 }
 
 void Board::Render()
 {
+	ConsoleHelper::SetCursorPos(0, 30);
+	cout << "Level : " << _level << endl;
+
 	ConsoleHelper::SetCursorPos(0, 0);
 	ConsoleHelper::ShowConsoleCursor(false);
+
+	// 시야 범위 설정 (예: N = 5)
+	int viewRange = 5;
+	Pos playerPos = _player->GetPos();
 
 	for (int y = 0; y < _size; y++)
 	{
 		for (int x = 0; x < _size; x++)
 		{
-			// TileType - WALL, EMPTY : 각각의 경우에는 색깔을 지정한 값을 출력하라.
+			Pos curPos = { y, x };
 
-			ConsoleColor color = GetColorByTileType(Pos{ y,x });
+			// 맨해튼 거리(Manhattan Distance) 또는 체비쇼프 거리 계산
+			// 여기서는 사각형 형태의 시야를 위해 체비쇼프 거리를 사용합니다.
+			int distY = abs(playerPos.y - x);
+			int distX = abs(playerPos.x - y);
+
+			ConsoleColor color;
+			// 시야 범위 N을 벗어나면 무조건 INVISIBLE 색상 적용
+			if (distY > viewRange || distX > viewRange)
+			{
+				color = ConsoleColor::BLACK;
+			}
+			else
+			{
+				color = GetColorByTileType(curPos);
+			}
+
 			ConsoleHelper::SetCursorColor(color);
 			cout << "●";
 		}
@@ -72,6 +123,10 @@ ConsoleColor Board::GetColorByTileType(Pos pos)
 	if (GetEndPos() == pos)
 		return ConsoleColor::WHITE;
 
+	for (auto& m : _monsters) {
+		if (m.pos == pos) return ConsoleColor::MAGENTA; // 보라색
+	}
+
 	TileType tiletype = GetTileType(pos);
 
 	switch (tiletype)
@@ -80,6 +135,11 @@ ConsoleColor Board::GetColorByTileType(Pos pos)
 		return ConsoleColor::GREEN;
 	case TileType::WALL:
 		return ConsoleColor::RED;
+	case TileType::INVISIBLE:
+		return ConsoleColor::BLACK;
+	default:
+		return ConsoleColor::BLACK;
+
 	}
 }
 

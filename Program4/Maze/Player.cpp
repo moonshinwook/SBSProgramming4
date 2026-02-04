@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Board.h"
 #include <queue>
+#include <Windows.h>
 
 Player::Player()
 {
@@ -14,37 +15,89 @@ Player::~Player()
 void Player::Init(Board* board)
 {
 	_board = board;
+	_pos = _board->GetStartPos();
 	//RightHand();
 
-	BFS();
+	//BFS();
 	//Astar();
 }
 
+
 void Player::Update(uint64 deltaTick)
 {
-	if (_pathIndex >= _path.size()) // 정해진 수를 넘어가지 못하도록 방지하는 코드
-	{
-		_pathIndex = 0;
-		_board->Init(_board->GetSize(), this); // Generatetemp << 새로운 맵
-		Init(_board);
-		return;
-	}
+	//if (_pathIndex >= _path.size()) // 정해진 수를 넘어가지 못하도록 방지하는 코드
+	//{
+	//	_pathIndex = 0;
+	//	_board->Init(_board->GetSize(), this); // Generatetemp << 새로운 맵
+	//	Init(_board);
+	//	return;
+	//}
 	_sumTick += deltaTick;
 
-	if (_sumTick >= MOVE_TICK)
-	{
-		_sumTick = 0;
+	//if (_sumTick >= MOVE_TICK)
+	//{
+	//	_sumTick = 0;
 
-		// 경로를 읽어와서 하나씩 움직여라.
-		_pos = _path[_pathIndex];
-		// 플레이어가 행동하고 싶은 코드
-		_pathIndex++;
-		// RandomMove();
+	//	// 경로를 읽어와서 하나씩 움직여라.
+	//	_pos = _path[_pathIndex];
+	//	// 플레이어가 행동하고 싶은 코드
+	//	_pathIndex++;
+	//	// RandomMove();
+	//}
+
+	Pos front[4] =
+	{
+		Pos{-1, 0}, // 위
+		Pos{0, -1}, // 왼
+		Pos{1, 0},  // 아래
+		Pos{0, 1},  // 오
+	};
+
+	if (_sumTick < MOVE_TICK)
+		return;
+
+	_sumTick = 0;
+
+	Pos nextPos = _pos;
+
+	// W
+	if (GetAsyncKeyState('W') & 0x8000)
+	{
+		nextPos.x -= 1;
+	}
+	// S
+	else if (GetAsyncKeyState('S') & 0x8000)
+	{
+		nextPos.x += 1;
+	}
+	// A
+	else if (GetAsyncKeyState('A') & 0x8000)
+	{
+		nextPos.y -= 1;
+	}
+	// D
+	else if (GetAsyncKeyState('D') & 0x8000)
+	{
+		nextPos.y += 1;
 	}
 
+	// 이동 가능하면 이동
+	if (CanGo(nextPos))
+	{
+		_pos = nextPos;
+	}
 
+	Pos exit = _board->GetEndPos();
+
+	if (_pos == exit)
+	{
+		_board->Init(_board->GetSize(), this); // Generatetemp << 새로운 맵
+		Init(_board);
+	}
 
 }
+
+
 
 // 우수법 : 오른쪽 벽을 짚고 길을 쭉 이동하면 언젠가는 미로를 탈출한다.
 // 어떻게 움직여야 탈출할 수 있나요? vector<_path>
@@ -156,7 +209,7 @@ void Player::RightHand()
 
 void Player::BFS()
 {
-	_pos = _board->GetStartPos();
+	
 	Pos pos = _pos;
 	Pos dest = _board->GetEndPos();
 
